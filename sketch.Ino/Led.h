@@ -1,31 +1,7 @@
-/*********
-  Rui Santos
-  Complete project details at https://RandomNerdTutorials.com/vs-code-platformio-ide-esp32-esp8266-arduino/
-*********/
-
-#include <Arduino.h>
-#include <WiFi.h>
-
-
 #define LED 2
 #define RED 12
 #define GREEN 14
 #define BLUE 27
-
-
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(115200);
-  pinMode(LED, OUTPUT);
-  pinMode(RED, OUTPUT);
-  pinMode(GREEN, OUTPUT);
-  pinMode(BLUE, OUTPUT);
-}
-
-void loop() {
-  dance(150);
-}
-
 
 void white() {
   digitalWrite(RED, HIGH);
@@ -86,8 +62,4 @@ void dance(int d) {
   delay(d);
   green();
   delay(d);
-}
-
-int add(int a, int b) {
-  return a + b;
 }

@@ -4,14 +4,16 @@
 *********/
 
 #include <Arduino.h>
+#include "arduino_secrets.h"
 #include <WiFi.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include "Led.h"
+#include "mqtt.h"
 
-#define LED 2
-#define RED 12
-#define GREEN 14
-#define BLUE 27
+
+
+
 
 
 
@@ -26,6 +28,7 @@ void setup() {
   pinMode(GREEN, OUTPUT);
   pinMode(BLUE, OUTPUT);
   initWiFi();
+  initMqtt();
   int c = add(5, 7);
   Serial.println(c);
   dallasSensors.begin();
@@ -44,11 +47,18 @@ void loop() {
   } else {
     green();
   }
+  // call poll() regularly to allow the library to send MQTT keep alive which
+  // avoids being disconnected by the broker
+  mqttClient.poll();
+  // send message, the Print interface can be used to set the message contents
+  mqttClient.beginMessage("temperature");
+  mqttClient.print(t);
+  mqttClient.endMessage();
 }
 
 void initWiFi() {
   WiFi.mode(WIFI_STA);
-  WiFi.begin("Dim", "Dim2009dim-dim");
+  WiFi.begin("AndroidAP", "fepv8845");
   Serial.print("Connecting to WiFi ..");
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(RED, HIGH);
@@ -63,66 +73,7 @@ void initWiFi() {
   digitalWrite(BLUE, HIGH);
 }
 
-void white() {
-  digitalWrite(RED, HIGH);
-  digitalWrite(GREEN, HIGH);
-  digitalWrite(BLUE, HIGH);
-}
 
-void red() {
-  digitalWrite(RED, HIGH);
-  digitalWrite(GREEN, LOW);
-  digitalWrite(BLUE, LOW);
-}
-
-void blue() {
-  digitalWrite(RED, LOW);
-  digitalWrite(GREEN, LOW);
-  digitalWrite(BLUE, HIGH);
-}
-
-void green() {
-  digitalWrite(RED, LOW);
-  digitalWrite(GREEN, HIGH);
-  digitalWrite(BLUE, LOW);
-}
-
-void yellow() {
-  digitalWrite(RED, HIGH);
-  digitalWrite(GREEN, HIGH);
-  digitalWrite(BLUE, LOW);
-}
-
-void azure() {
-  digitalWrite(RED, LOW);
-  digitalWrite(GREEN, HIGH);
-  digitalWrite(BLUE, HIGH);
-}
-
-void pink() {
-  digitalWrite(RED, HIGH);
-  digitalWrite(GREEN, LOW);
-  digitalWrite(BLUE, HIGH);
-}
-
-void dance(int d) {
-  white();
-  delay(d);
-  pink();
-  delay(d);
-  green();
-  delay(d);
-  azure();
-  delay(d);
-  yellow();
-  delay(d);
-  red();
-  delay(d);
-  blue();
-  delay(d);
-  green();
-  delay(d);
-}
 
 int add(int a, int b) {
   return a + b;
