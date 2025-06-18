@@ -58,7 +58,7 @@ void loop() {
 
 void initWiFi() {
   WiFi.mode(WIFI_STA);
-  WiFi.begin("AndroidAP", "fepv8845");
+  WiFi.begin("WIFI", "PASSWORD");
   Serial.print("Connecting to WiFi ..");
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(RED, HIGH);
